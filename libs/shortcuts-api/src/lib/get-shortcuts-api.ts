@@ -20,7 +20,11 @@ export const getShortcutsApi: () => HttpsFunction = (): HttpsFunction => runWith
   }).then<void>((): void => void(0))) : response.status(404).end() && void(0))(privateEnvironmentDocumentSnapshot.data())) : request.body["operation"] === "set focus" ? request.body["focus"] ? (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).get().then<void>((privateEnvironmentDocumentSnapshot: DocumentSnapshot<PrivateEnvironmentDocument>): Promise<void> => (async (privateEnvironmentDocument: PrivateEnvironmentDocument | undefined): Promise<void> => privateEnvironmentDocument ? privateEnvironmentDocument["focus"] === request.body["focus"] ? response.json(privateEnvironmentDocument).end() && void(0) : (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).update({
     "focus": request.body["focus"],
     "focusPrior": privateEnvironmentDocument.focus,
-  }).then<void>((): Promise<void> => (firestore.collection("environment").doc("public") as DocumentReference<PublicEnvironmentDocument>).update({
+  }).then<void>((): Promise<void> => response.json({
+    ...privateEnvironmentDocument,
+    "focus": request.body["focus"],
+    "focusPrior": privateEnvironmentDocument.focus,
+  }).end() && (firestore.collection("environment").doc("public") as DocumentReference<PublicEnvironmentDocument>).update({
     "focus": request.body["focus"],
   }).then<void>((): void => void(0))) : response.status(404).end() && void(0))(privateEnvironmentDocumentSnapshot.data())) : response.status(400).end() && void(0) : request.body["operation"] === "set location" ? request.body["location"] ? (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).get().then<void>((privateEnvironmentDocumentSnapshot: DocumentSnapshot<PrivateEnvironmentDocument>): Promise<void> => (async (privateEnvironmentDocument: PrivateEnvironmentDocument | undefined): Promise<void> => privateEnvironmentDocument ? privateEnvironmentDocument.location === request.body["location"] ? response.json(privateEnvironmentDocument).end() && void(0) : (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).update({
     "location": request.body["location"],
