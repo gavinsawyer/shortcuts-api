@@ -1,0 +1,32 @@
+{
+  "name": "shortcuts-api",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "assets": [
+          {
+            "glob": "README.md",
+            "input": ".",
+            "output": "."
+          }
+        ],
+        "main": "src/index.ts",
+        "outputPath": "dist/",
+        "tsConfig": "tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
