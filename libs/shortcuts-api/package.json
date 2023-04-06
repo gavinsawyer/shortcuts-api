@@ -1,0 +1,17 @@
+{
+  "name": "@gavinsawyer/shortcuts-api",
+  "version": "1.0.1",
+  "author": {
+    "name": "Gavin Sawyer",
+    "email": "hello@gavinsawyer.dev",
+    "url": "https://github.com/gavinsawyer"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "firebase-functions": "^4"
+  },
+  "private": false
+}

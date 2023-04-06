@@ -1,7 +1,7 @@
 {
   "name": "shortcuts-api",
-  "$schema": "node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shortcuts-api/src",
   "projectType": "library",
   "targets": {
     "build": {
@@ -15,16 +15,16 @@
             "output": "."
           }
         ],
-        "main": "src/index.ts",
-        "outputPath": "dist/",
-        "tsConfig": "tsconfig.lib.json"
+        "main": "libs/shortcuts-api/src/index.ts",
+        "outputPath": "dist/libs/shortcuts-api",
+        "tsConfig": "libs/shortcuts-api/tsconfig.lib.json"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["**/*.ts"]
+        "lintFilePatterns": ["libs/shortcuts-api/**/*.ts"]
       }
     }
   },

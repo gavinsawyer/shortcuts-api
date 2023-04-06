@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "npmScope": "gavinsawyer",
+  "affected": {
+    "defaultBase": "main"
+  },
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",
@@ -21,6 +24,7 @@
       ]
     }
   },
+  "defaultProject": "shortcuts-api",
   "namedInputs": {
     "default": [
       "{projectRoot}/**/*",

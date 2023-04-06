@@ -1,7 +1,7 @@
 import { DocumentReference, DocumentSnapshot, Firestore, getFirestore } from "firebase-admin/firestore";
-import { HttpsFunction, Request, Response, runWith }                    from "firebase-functions";
-import { PrivateEnvironmentDocument }                                   from "./private-environment-document";
-import { PublicEnvironmentDocument }                                    from "./public-environment-document";
+import { HttpsFunction, Request, Response, runWith } from "firebase-functions";
+import { PrivateEnvironmentDocument }                from "./private-environment-document";
+import { PublicEnvironmentDocument }                 from "./public-environment-document";
 
 
 export const getShortcutsApi: () => HttpsFunction = (): HttpsFunction => runWith({
