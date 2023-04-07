@@ -1,12 +1,16 @@
 {
   "name": "@gavinsawyer/shortcuts-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "Gavin Sawyer",
     "email": "hello@gavinsawyer.dev",
-    "url": "https://github.com/gavinsawyer"
+    "url": "https://gavinsawyer.dev"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gavinsawyer/shortcuts-api.git"
+  },
   "engines": {
     "node": "18"
   },

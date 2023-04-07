@@ -1,20 +1,25 @@
 {
   "name": "@gavinsawyer/shortcuts-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "Gavin Sawyer",
     "email": "hello@gavinsawyer.dev",
-    "url": "https://github.com/gavinsawyer"
+    "url": "https://gavinsawyer.dev"
   },
   "scripts": {
-    "build": "npx nx run build --skip-nx-cache"
+    "build": "npx nx run build"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gavinsawyer/shortcuts-api.git"
+  },
   "devDependencies": {
     "@nrwl/cli": "^15",
     "@nrwl/js": "^15.9.2",
     "@nrwl/nx-cloud": "^15.3.5",
     "@nrwl/workspace": "^15",
+    "eslint-plugin-tsdoc": "^0.2.17",
     "firebase-functions": "^4.2.1",
     "nx": "^15",
     "prettier": "^2.8.7",

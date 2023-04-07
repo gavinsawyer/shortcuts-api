@@ -4,6 +4,9 @@ import { PrivateEnvironmentDocument }                                   from "./
 import { PublicEnvironmentDocument }                                    from "./public-environment-document";
 
 
+/**
+ * @returns An {@link HttpsFunction} which will need to be exported from your Firebase Functions package index.
+ */
 export const getShortcutsApi: () => HttpsFunction = (): HttpsFunction => runWith({
   enforceAppCheck: false,
 })
