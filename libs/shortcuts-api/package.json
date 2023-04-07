@@ -1,11 +1,12 @@
 {
   "name": "@gavinsawyer/shortcuts-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": {
     "name": "Gavin Sawyer",
     "email": "hello@gavinsawyer.dev",
     "url": "https://gavinsawyer.dev"
   },
+  "module": "./src/index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
