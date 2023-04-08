@@ -19,7 +19,6 @@ jobs:
           key: node-modules-cache-${{ hashFiles('package-lock.json') }}
       - if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
-      - run: npm i @nrwl/nx-linux-x64-gnu@^15
       - run: npx nx run build
         env:
           NX_CLOUD_ACCESS_TOKEN: '${{ secrets.NX_CLOUD_ACCESS_TOKEN }}'
