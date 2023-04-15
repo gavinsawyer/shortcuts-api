@@ -11,4 +11,4 @@ Additional operations for location and time enable more detailed home automation
 
 > An example automation I've implemented turns off the Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
 > 
-> [See this part of my Shortcuts setup](https://imgur.com/a/2E71mim)
+> [See this part of my Shortcuts setup](https://imgur.com/a/LE1fxqm)
