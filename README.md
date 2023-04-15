@@ -11,9 +11,9 @@ From your Firebase Functions package root, run:
 
 Export the function by calling `getShortcutsApi` with a config object. Config object values must match values in your [Config shortcut](https://imgur.com/a/aM3oiQS).
 ```ts
-import { initializeApp }   from 'firebase-admin/app';
-import { HttpsFunction }   from "firebase-functions";
-import { getShortcutsApi } from '@gavinsawyer/shortcuts-api';
+import { getApps, initializeApp } from "firebase-admin/app";
+import { HttpsFunction }          from "firebase-functions";
+import { getShortcutsApi }        from "@gavinsawyer/shortcuts-api";
 
 
 getApps().length === 0 && initializeApp();
