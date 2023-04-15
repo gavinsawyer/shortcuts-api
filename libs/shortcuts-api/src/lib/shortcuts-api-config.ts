@@ -1,7 +1,6 @@
 /**
- * Define these and retrieve the values from Secret Manager. Config object values must match values in your [Config shortcut](https://imgur.com/a/aM3oiQS).
+ * Define this and retrieve the value from Secret Manager. `accessToken` should match the value in your [Config shortcut](https://imgur.com/a/aM3oiQS).
  */
 export interface ShortcutsApiConfig {
   accessToken: string,
-  homeName: string,
 }

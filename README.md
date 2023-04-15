@@ -9,7 +9,7 @@ From your Firebase Functions package root, run:
 
 `% npm install @gavinsawyer/shortcuts-api --save`
 
-Export the function by calling `getShortcutsApi` with a config object. Config object values must match values in your [Config shortcut](https://imgur.com/a/aM3oiQS).
+Export the function by calling `getShortcutsApi` with a config object. `accessToken` should match the value in your [Config shortcut](https://imgur.com/a/aM3oiQS).
 ```ts
 import { getApps, initializeApp } from "firebase-admin/app";
 import { HttpsFunction }          from "firebase-functions";
@@ -25,8 +25,7 @@ export const shortcutsApi: HttpsFunction = getShortcutsApi({...});
 ```ts
 export interface ShortcutsApiConfig {
   accessToken: string,
-  homeName: string,
-} // Define these and retrieve the values from Secret Manager.
+} // Define this and retrieve the value from Secret Manager.
 ```
 Deploy your Firebase Functions:
 

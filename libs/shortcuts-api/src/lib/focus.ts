@@ -1,1 +1,1 @@
-export type Focus = "Do Not Disturb" | "Personal" | "Sleep" | "Studying" | "Developing" | "Driving" | "Fitness";
+export type Focus = "Developing" | "Do Not Disturb" | "Driving" | "Fitness" | "Personal" | "Sleep" | "Studying" | "Work";
