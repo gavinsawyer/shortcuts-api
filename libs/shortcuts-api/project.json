@@ -17,7 +17,8 @@
         ],
         "main": "libs/shortcuts-api/src/index.ts",
         "outputPath": "dist/libs/shortcuts-api",
-        "tsConfig": "libs/shortcuts-api/tsconfig.lib.json"
+        "tsConfig": "libs/shortcuts-api/tsconfig.lib.json",
+        "updateBuildableProjectDepsInPackageJson": false
       }
     },
     "lint": {
