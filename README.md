@@ -9,7 +9,7 @@ From your Firebase Functions package root, run:
 
 `% npm install @gavinsawyer/shortcuts-api --save`
 
-Export the function by calling `getShortcutsApi` with a config object. `accessToken` should match the value in your [Config shortcut](https://imgur.com/a/aM3oiQS).
+Export the function by calling `getShortcutsApi` with a config object.
 ```ts
 import { getApps, initializeApp } from "firebase-admin/app";
 import { HttpsFunction }          from "firebase-functions";
@@ -24,8 +24,9 @@ export const shortcutsApi: HttpsFunction = getShortcutsApi({...});
 ```
 ```ts
 export interface ShortcutsApiConfig {
-  accessToken: string,
-} // Define this and retrieve the value from Secret Manager.
+  accessToken: string,               // Define this and retrieve the value from Secret Manager. It should match the value in your Config shortcut.
+  environmentCollectionPath: string, // Collection where public and private documents are stored.
+}
 ```
 Deploy your Firebase Functions:
 
@@ -44,10 +45,25 @@ For a complete implementation, in the Automation section of Shortcuts on iOS, cr
 - %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}"
 - Anything -> `On Start or End %{FOCUS}` (To set your Focus mode programmatically)
 
-When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation. This allows the user's live Focus to appear in a website or app using Firestore. Only the live Focus is stored in a document intended to be public, while prior focus, location, and time are stored in a separate document used internally,
-
+When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation. This allows the user's live Focus to appear in a website or app using Firestore. Only the live Focus is stored in a document intended to be public, while prior focus, location, and time are stored in a separate document used internally:
+```ts
+export interface PublicEnvironmentDocument {
+  "focus"?: Focus,
+}
+```
+```ts
+export interface PrivateEnvironmentDocument {
+  "focus"?: Focus,
+  "focusPrior"?: Focus,
+  "location"?: "At Home" | "Away",
+  "time"?: "Day" | "Night",
+}
+```
+Currently supported Focus modes:
+```ts
+export type Focus = "Developing" | "Do Not Disturb" | "Driving" | "Fitness" | "Personal" | "Sleep" | "Studying" | "Work";
+```
 Operations for focus, location, and time combined enable highly detailed home automation. The initial problem this aimed to solve was disabling motion-activated lights while in Sleep focus, not at a hard-coded time of day. However, it's capable of doing much more.
-
 > An example automation using the `Turn On Sleep Settings` shortcut reminds me to connect my phone to the charger before going to sleep by only turning off my bedroom lights when the charger is connected.
 >
 > [See this part of my Shortcuts setup](https://imgur.com/a/mIncLX1)
