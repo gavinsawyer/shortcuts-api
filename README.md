@@ -36,14 +36,14 @@ Deploy your Firebase Functions:
 Download and import the [shortcuts](shortcuts). `Config` requires setup including giving shortcuts your access token and Cloud Function URL and reviewing what data you want shortcuts to store and use. [Automation shortcuts](shortcuts/automation) are left empty to be customized. `Turn On At Home Settings` is not triggered if you are in Sleep Focus unless `Use Focus` is disabled in `Config`.
 
 For a complete implementation, in the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [automation trigger](shortcuts/automation-triggers) shortcuts for each of the following:
-- Time of Day: Sunrise -> `On Sunrise or Sunset` with input: "Day"
-- Time of Day: Sunset -> `On Sunrise or Sunset` with input: "Night"
+- Time of Day: Sunrise -> `On Sunrise`
+- Time of Day: Sunset -> `On Sunset`
 - Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
-- Apple Watch Workout: Starts/Ends -> `On Start or End Fitness`
+- Apple Watch Workout: Starts/Ends -> `On Start or End Fitness Activity`
 - Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
-- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}"
-- Anything -> `On Start or End %{FOCUS}` (To set your Focus mode programmatically)
+- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your devices' Focus mode changes.)
+- Anything -> `On Start or End %{FOCUS} Activity` (To set your device's Focus mode programmatically.)
 
 When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation. This allows the user's live Focus to appear in a website or app using Firestore. Only the live Focus is stored in a document intended to be public, while prior focus, location, and time are stored in a separate document used internally:
 ```ts
