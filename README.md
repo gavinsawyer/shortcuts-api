@@ -32,6 +32,8 @@ Deploy your Firebase Functions:
 `% firebase deploy --only functions`
 
 ### Usage
+Download and import the [shortcuts](shortcuts). `Config` requires setup including giving shortcuts your access token and Cloud Function URL and reviewing what data you want shortcuts to store and use. [Automation shortcuts](shortcuts/automation) are left empty to be customized. `Turn On At Home Settings` is not triggered if you are in Sleep Focus unless `Use Focus` is disabled in `Config`.
+
 When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation, for example. This allows the user's live Focus to appear in a website or app using Firestore.
 
 Additional operations for location and time enable more detailed home automation. iOS and tvOS (running on Apple TV and HomePods) Automations set device and home conditions according to the user's state.
