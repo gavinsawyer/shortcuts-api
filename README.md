@@ -34,10 +34,24 @@ Deploy your Firebase Functions:
 ### Usage
 Download and import the [shortcuts](shortcuts). `Config` requires setup including giving shortcuts your access token and Cloud Function URL and reviewing what data you want shortcuts to store and use. [Automation shortcuts](shortcuts/automation) are left empty to be customized. `Turn On At Home Settings` is not triggered if you are in Sleep Focus unless `Use Focus` is disabled in `Config`.
 
-When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation, for example. This allows the user's live Focus to appear in a website or app using Firestore.
+For a complete implementation, in the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [automation trigger](shortcuts/automation-triggers) shortcuts for each of the following:
+- Time of Day: Sunrise -> `On Sunrise or Sunset` with input: "Day"
+- Time of Day: Sunset -> `On Sunrise or Sunset` with input: "Night"
+- Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
+- CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
+- Apple Watch Workout: Starts/Ends -> `On Start or End Fitness`
+- Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
+- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}"
+- Anything -> `On Start or End %{FOCUS}` (To set your Focus mode programmatically)
 
-Additional operations for location and time enable more detailed home automation. iOS and tvOS (running on Apple TV and HomePods) Automations set device and home conditions according to the user's state.
+When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation. This allows the user's live Focus to appear in a website or app using Firestore. Only the live Focus is stored in a document intended to be public, while prior focus, location, and time are stored in a separate document used internally,
 
-> An example automation I've implemented turns off the Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
+Operations for focus, location, and time combined enable highly detailed home automation. The initial problem this aimed to solve was disabling motion-activated lights while in Sleep focus, not at a hard-coded time of day. However, it's capable of doing much more.
+
+> An example automation using the `Turn On Sleep Settings` shortcut reminds me to connect my phone to the charger before going to sleep by only turning off my bedroom lights when the charger is connected.
 >
-> [See this part of my Shortcuts setup](https://imgur.com/a/LE1fxqm)
+> [See this part of my Shortcuts setup](https://imgur.com/a/mIncLX1)
+
+> A more complex example using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
+> 
+> [See this part of my Shortcuts setup and how each shortcut works](https://imgur.com/a/LE1fxqm)
