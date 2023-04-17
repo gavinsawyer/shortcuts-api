@@ -12,7 +12,7 @@ API operations for storing focus, location, and time combined enable highly deta
 
 > A more complex example using the `On Stop Wake-Up Alarm` Shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
 >
-> [See this part of my Shortcuts setup and how each Shortcut works](https://imgur.com/a/kALfGOs)
+> [See this part of my Shortcuts setup](https://imgur.com/a/Wenixz1)
 ### Deployment
 From your Firebase Functions package root, run:
 
@@ -55,7 +55,7 @@ Download and import the [Shortcuts](shortcuts). `Config` requires setup includin
 
 In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger](shortcuts/automation-triggers) Shortcuts for each of the following events:
 - You Choose -> `On Arrive or Depart`
-  - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap iPhone on your way out the door.)
+  - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap your iPhone on your way in and out.)
   - Unfortunately location-based automations cannot be triggered without user permission each time except on tvOS, and Home Automations cannot run Shortcuts.
 - %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
