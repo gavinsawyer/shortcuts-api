@@ -5,7 +5,7 @@ A Firebase Function and library of Shortcuts used to read and update Firestore f
 [![ShortcutsAPI version](https://img.shields.io/npm/v/@gavinsawyer/shortcuts-api?logo=npm)](https://www.npmjs.com/package/@gavinsawyer/shortcuts-api)
 [![Firebase-Functions version](https://img.shields.io/npm/dependency-version/@gavinsawyer/shortcuts-api/firebase-functions?logo=firebase)](https://www.npmjs.com/package/firebase-functions)
 ### Thesis
-API operations for storing focus, location, and time combined enable highly detailed Home Automations. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/s9ZpSb6), not at a hard-coded time of day. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
+API operations for storing focus, location, and time combined enable highly detailed Home Automations. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/BVXWg3b), not at a hard-coded time of day. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
 > An example automation using the `Turn On Sleep Settings` Shortcut reminds me to charge my iPhone before going to sleep by only turning off my bedroom lights when the charger is connected.
 >
 > [See this part of my Shortcuts setup](https://imgur.com/a/Brv2zBs)
@@ -57,10 +57,10 @@ In the Automation section of Shortcuts on iOS, create Personal Automations point
 - You Choose -> `On Arrive or Depart`
   - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap your iPhone on your way in and out.)
   - Unfortunately location-based automations cannot be triggered without user permission each time except on tvOS, and Home Automations cannot run Shortcuts.
-- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
+- ${FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
 - Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
-- You Choose -> `On Start or End %{FOCUS} Activity` (To set your device's Focus mode programmatically.)
+- You Choose -> `On Start or End ${FOCUS} Activity` (To set your device's Focus mode programmatically.)
   - Example: Apple Watch Workout: Any Workout Except Walking Starts/Ends -> `On Start or End Fitness Activity`
 - Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
 - Time of Day: Sunrise -> `On Sunrise`
