@@ -1,9 +1,18 @@
 ## ShortcutsAPI
-A Firebase Function used to read and update Firestore from iOS and tvOS Automations.
+A Firebase Function and library of Shortcuts used to read and update Firestore from iOS and tvOS Automations.
 
 [![GitHub workflow status](https://img.shields.io/github/actions/workflow/status/gavinsawyer/shortcuts-api/ci.yml)](https://github.com/gavinsawyer/shortcuts-api/actions/workflows/ci.yml)
 [![ShortcutsAPI version](https://img.shields.io/npm/v/@gavinsawyer/shortcuts-api?logo=npm)](https://www.npmjs.com/package/@gavinsawyer/shortcuts-api)
 [![Firebase-Functions version](https://img.shields.io/npm/dependency-version/@gavinsawyer/shortcuts-api/firebase-functions?logo=firebase)](https://www.npmjs.com/package/firebase-functions)
+### Thesis
+API operations for storing focus, location, and time combined enable highly detailed Home Automations. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/s9ZpSb6), not at a hard-coded time of day. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
+> An example automation using the `Turn On Sleep Settings` Shortcut reminds me to charge my iPhone before going to sleep by only turning off my bedroom lights when the charger is connected.
+>
+> [See this part of my Shortcuts setup](https://imgur.com/a/Brv2zBs)
+
+> A more complex example using the `On Stop Wake-Up Alarm` Shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
+>
+> [See this part of my Shortcuts setup and how each Shortcut works](https://imgur.com/a/kALfGOs)
 ### Deployment
 From your Firebase Functions package root, run:
 
@@ -24,7 +33,7 @@ export const shortcutsApi: HttpsFunction = getShortcutsApi({...});
 ```
 ```ts
 export interface ShortcutsApiConfig {
-  accessToken: string,               // Define this and retrieve the value from Secret Manager. It should match the value in your Config shortcut.
+  accessToken: string,               // Define this and retrieve the value from Secret Manager. It should match the value in your Config Shortcut.
   environmentCollectionPath: string, // Collection where public and private documents are stored.
 }
 ```
@@ -33,19 +42,31 @@ Deploy your Firebase Functions:
 `% firebase deploy --only functions`
 
 ### Usage
-Download and import the [shortcuts](shortcuts). `Config` requires setup including giving shortcuts your access token and Cloud Function URL and reviewing what data you want shortcuts to store and use. [Automation shortcuts](shortcuts/automation) are left empty to be customized. `Turn On At Home Settings` is not triggered if you are in Sleep Focus unless `Use Focus` is disabled in `Config`.
+Download and import the [Shortcuts](shortcuts). `Config` requires setup including:
+- Giving Shortcuts your access token and Cloud Function URL
+- Reviewing what data you want to store and use. With `Use Focus` turned on, disable automatic Focus modes in Settings and use Shortcuts instead. The same is true for `Use Time`, which will set your device's Appearance (Light/Dark) and can interfere with the Automatic Appearance setting in Display & Brightness.
 
-For a complete implementation, in the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [automation trigger](shortcuts/automation-triggers) shortcuts for each of the following:
+[Automation](shortcuts/automation) Shortcuts are left empty to be customized:
+- `Turn On At Home Settings`: Thermostat and other settings which don't change at sunrise/sunset. Only triggered when you are awake unless `Use Focus` is disabled in `Config`. This is always preceded by either:
+  - `Turn On Daytime Settings`: Lighting or other settings which do change at sunrise/sunset.
+  - `Turn On Nighttime Settings`: Lighting or other settings which do change at sunrise/sunset. Never triggered if `Use Time` is disabled in `Config`.
+- `Turn On Away Settings`: All settings for your home when you are away. Never triggered if `Use Location` is disabled in `Config`.
+- `Turn On Sleep Settings`: All settings for your home when you are asleep. Never triggered if `Use Focus` is disabled in `Config`.
+
+In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger](shortcuts/automation-triggers) Shortcuts for each of the following events:
+- You Choose -> `On Arrive or Depart`
+  - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap iPhone on your way out the door.)
+  - Unfortunately location-based automations cannot be triggered without user permission each time except on tvOS, and Home Automations cannot run Shortcuts.
+- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
+- CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
+- Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
+- You Choose -> `On Start or End %{FOCUS} Activity` (To set your device's Focus mode programmatically.)
+  - Example: Apple Watch Workout: Any Workout Except Walking Starts/Ends -> `On Start or End Fitness Activity`
+- Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
 - Time of Day: Sunrise -> `On Sunrise`
 - Time of Day: Sunset -> `On Sunset`
-- Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
-- CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
-- Apple Watch Workout: Starts/Ends -> `On Start or End Fitness Activity`
-- Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
-- %{FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your devices' Focus mode changes.)
-- Anything -> `On Start or End %{FOCUS} Activity` (To set your device's Focus mode programmatically.)
 
-When updating the Focus mode (`Do Not Disturb`/`Driving`/etc.) on any device, the iPhone triggers an Automation which calls the function with the `set focus` operation. This allows the user's live Focus to appear in a website or app using Firestore. Only the live Focus is stored in a document intended to be public, while prior focus, location, and time are stored in a separate document used internally:
+The API stores data in two documents so that realtime Focus can be displayed on a personal website. Only the current Focus is stored in a document intended to be made public, while prior focus, location, and time are stored in a separate document used internally:
 ```ts
 export interface PublicEnvironmentDocument {
   "focus"?: Focus,
@@ -63,11 +84,3 @@ Currently supported Focus modes:
 ```ts
 export type Focus = "Developing" | "Do Not Disturb" | "Driving" | "Fitness" | "Personal" | "Sleep" | "Studying" | "Work";
 ```
-Operations for focus, location, and time combined enable highly detailed home automation. The initial problem this aimed to solve was disabling motion-activated lights while in Sleep focus, not at a hard-coded time of day. However, it's capable of doing much more.
-> An example automation using the `Turn On Sleep Settings` shortcut reminds me to connect my phone to the charger before going to sleep by only turning off my bedroom lights when the charger is connected.
->
-> [See this part of my Shortcuts setup](https://imgur.com/a/mIncLX1)
-
-> A more complex example using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
-> 
-> [See this part of my Shortcuts setup and how each shortcut works](https://imgur.com/a/LE1fxqm)
