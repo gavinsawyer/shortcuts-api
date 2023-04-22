@@ -1,11 +1,11 @@
 ## ShortcutsAPI
-A Firebase Function and library of iOS shortcuts used to create highly detailed home automations based on the user's Focus mode, location, and time of day. The Focus mode can also be displayed on a personal website in real-time.
+An API and library of iOS shortcuts used to create highly detailed home automations based on the user's Focus mode, location, and time of day. The Focus mode can also be displayed on a personal website in real-time.
 
 [![GitHub workflow status](https://img.shields.io/github/actions/workflow/status/gavinsawyer/shortcuts-api/ci.yml)](https://github.com/gavinsawyer/shortcuts-api/actions/workflows/ci.yml)
 [![ShortcutsAPI version](https://img.shields.io/npm/v/@gavinsawyer/shortcuts-api?logo=npm)](https://www.npmjs.com/package/@gavinsawyer/shortcuts-api)
 [![Firebase-Functions version](https://img.shields.io/npm/dependency-version/@gavinsawyer/shortcuts-api/firebase-functions?logo=firebase)](https://www.npmjs.com/package/firebase-functions)
 ### Thesis
-An API for storing focus, location, and time enables highly detailed home automations in the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/BVXWg3b), not at a hard-coded time of day. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
+Having somewhere to store and retrieve Focus mode, location, and time of day enables highly detailed home automations in HomeKit and the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/BVXWg3b) rather than at a hard-coded time. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
 > An example of home automation using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
 >
 > [See this part of my Shortcuts setup](https://imgur.com/a/Wenixz1)
@@ -58,7 +58,7 @@ Download and import the [shortcuts](shortcuts) to your Mac or iOS device. `Confi
 In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-trigger) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary. 
 - You Choose -> `On Arrive or Depart`
   - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap your iPhone on your way in and out.)
-  - Unfortunately location-based automations cannot be triggered without user permission each time except on tvOS, and Home Automations cannot run shortcuts.
+  - Unfortunately, Apple does not allow location-based automations to run without receiving permission each time.
 - ${FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
 - Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
