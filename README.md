@@ -14,11 +14,11 @@ Having somewhere to store and retrieve Focus mode, location, and time of day ena
 >
 > [See this part of my Shortcuts setup](https://imgur.com/a/eITKS09)
 ### Deployment
-From your Firebase Functions package root, run:
+1. From your Firebase Functions package root, run:
 
 `% npm install @gavinsawyer/shortcuts-api --save`
 
-Export the function by calling `getShortcutsApi` with a config object.
+2. Export the function by calling `getShortcutsApi` with a config object.
 ```ts
 import { getApps, initializeApp } from "firebase-admin/app";
 import { HttpsFunction }          from "firebase-functions";
@@ -27,7 +27,7 @@ import { getShortcutsApi }        from "@gavinsawyer/shortcuts-api";
 
 getApps().length === 0 && initializeApp();
 
-export const shortcutsApi: HttpsFunction = getShortcutsApi({...});
+export const shortcutsAPI: HttpsFunction = getShortcutsApi({...});
 
 // Other functions...
 ```
@@ -36,7 +36,7 @@ export interface ShortcutsApiConfig {
   environmentCollectionPath: string, // Firestore collection where public and private documents are saved.
 }
 ```
-Deploy your Firebase Functions:
+3. Deploy your Firebase Functions:
 
 `% firebase deploy --only functions`
 ### Usage
