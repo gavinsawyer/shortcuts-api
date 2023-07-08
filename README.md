@@ -5,14 +5,14 @@ An API and library of iOS shortcuts used to create highly detailed home automati
 [![ShortcutsAPI version](https://img.shields.io/npm/v/@gavinsawyer/shortcuts-api?logo=npm)](https://www.npmjs.com/package/@gavinsawyer/shortcuts-api)
 [![Firebase-Functions version](https://img.shields.io/npm/dependency-version/@gavinsawyer/shortcuts-api/firebase-functions?logo=firebase)](https://www.npmjs.com/package/firebase-functions)
 ### Thesis
-Having somewhere to store and retrieve Focus mode, location, and time of day enables highly detailed home automations in HomeKit and the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](https://imgur.com/a/BVXWg3b) rather than at a hard-coded time. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
-> An example of home automation using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus and turns on my apartment lights and espresso machine if I am at home when my wake-up alarm is stopped.
->
-> [See this part of my Shortcuts setup](https://imgur.com/a/Wenixz1)
+Having somewhere to store and retrieve Focus mode, location, and time of day enables highly detailed home automations in HomeKit and the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](./examples/Occupancy%20Detected%20Example.md) rather than at a hard-coded time. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
+> An example of home automation using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus, turns on my apartment lights and espresso machine, and prompts Siri to tell me the weather and my first calendar events over intercom if I am at home when my wake-up alarm is stopped:
+> 
+> ![On Stop Wake-Up Alarm Example](./examples/On%20Stop%20Wake-Up%20Alarm%20Example.png)
 
-> An example of home state management using the `Asleep and At Home` shortcut reminds me to charge my iPhone before going to sleep by only turning off my bedroom lights when the charger is connected.
+> An example of home state management using the `Asleep and At Home` shortcut reminds me to charge my iPhone before going to sleep by only turning off my bedroom lights when the charger is connected:
 >
-> [See this part of my Shortcuts setup](https://imgur.com/a/eITKS09)
+> ![Asleep and At Home Example](./examples/Asleep%20and%20At%20Home%20Example.png)
 ### Deployment
 1. From your Firebase Functions package root, run:
 
@@ -40,33 +40,30 @@ export interface ShortcutsApiConfig {
 
 `% firebase deploy --only functions`
 ### Usage
-Download and import the [shortcuts](shortcuts) to your Mac or iOS device. `Config` requires setup including:
+Download and import all items in within the [shortcuts](shortcuts) directory to your Mac or iOS device. You may organize them into folders once imported, but it's not necessary. `Config` requires setup including:
+- Providing your home Wi-Fi network's name and the Cloud Function's URL.
 - Creating an `Access Token`
-- Providing the `Cloud Function URL`
-- Reviewing what data you want to store and use:
-  - With `Use Focus` turned on, disable automatic Focus modes (including schedules, Car Bluetooth/CarPlay, etc.) in Settings and use shortcuts instead. 
-  - With `Use Location` turned on, disable any geolocation-based automations and use shortcuts instead.
-  - With `Use Time` turned on, disable the Automatic Appearance setting in Display & Brightness.
+- Reviewing what data you want to store and use. Each :
+  - With `Use Focus` turned on, your iPhones current focus mode is stored. Disable automatic Focus modes (including schedules, Car Bluetooth/CarPlay, etc.) in Settings and use personal automations instead.
+  - With `Use Location` turned on, whether your iPhone is connected to your home Wi-Fi network is stored for use in automations on other devices.
+  - With `Use Time` turned on, whether it is before or after sunset is stored. Disable the Automatic Appearance setting in Display & Brightness.
 
-[Automation State shortcuts](shortcuts/automation-state) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects.
+[Automation State shortcuts](shortcuts/automation-state) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
 - `Awake and At Home Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake unless `Use Focus` is disabled in `Config`. This is always preceded by either:
   - `Awake and At Home Before Sunset`: Partial state of your home when awake during daytime (brighter lighting, etc.).
   - `Awake and At Home Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.). Never triggered if `Use Time` is disabled in `Config`.
-- `Away`: Complete state of your home when you are away. Never triggered if `Use Location` is disabled in `Config`.
+- `Away`: Complete state of your home when you are away.
 - `Asleep and At Home`: Complete state of your home when you are asleep. Never triggered if `Use Focus` is disabled in `Config`.
 
-In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-trigger) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary. 
-- You Choose -> `On Arrive or Depart`
-  - Example: NFC Tag Detected -> `On Arrive or Depart` (Tape a [£2 walnut NFC card](https://nfctagify.com/product/nfc-walnut-business-card-ntag213/) to the wall beside a lightswitch, tap your iPhone on your way in and out.)
-  - Unfortunately, Apple does not allow location-based automations to run without receiving permission each time.
-- ${FOCUS}: Turned on/off -> `On Change Focus` with input: "${FOCUS}" (To update Firestore when your device's Focus mode changes.)
+In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary. 
+- iPhone joins or leaves home Wi-Fi network -> `On Arrive or Depart` (Updates Firestore with your location)
+- You Choose -> `On Start or End Focus Activity` with the focus as text input. (To set your device's Focus mode programmatically–[example](./examples/On%20Start%20or%20End%20Focus%20Activity%20Example.md))
+- Time of Day: Sunrise/Sunset -> `On Sunrise`/`On Sunset` (Updates Firestore with the time)
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
 - Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
-- You Choose -> `On Start or End ${FOCUS} Activity` (To set your device's Focus mode programmatically.)
-  - Example: Apple Watch Workout: Any Workout Except Walking Starts/Ends -> `On Start or End Fitness Activity`
 - Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
-- Time of Day: Sunrise -> `On Sunrise`
-- Time of Day: Sunset -> `On Sunset`
+- ${FOCUS}: Turned on/off -> `On Change Focus` with the current focus as text input. (Updates Firestore with your device's Focus mode–[example](./examples/On%20Change%20Focus%20Example.md))
+
 
 The API stores data in two documents so that the Focus mode can be displayed on a personal website in real-time. The document intended to be made public only has `focus`, while a separate document used internally also has `focusPrior`, `location`, and `time`:
 ```ts
