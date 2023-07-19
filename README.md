@@ -43,17 +43,13 @@ export interface ShortcutsApiConfig {
 Download and import all items in within the [shortcuts](shortcuts) directory to your Mac or iOS device. You may organize them into folders once imported, but it's not necessary. `Config` requires setup including:
 - Providing your home Wi-Fi network's name and the Cloud Function's URL.
 - Creating an `Access Token`
-- Reviewing what data you want to store and use. Each :
-  - With `Use Focus` turned on, your iPhones current focus mode is stored. Disable automatic Focus modes (including schedules, Car Bluetooth/CarPlay, etc.) in Settings and use personal automations instead.
-  - With `Use Location` turned on, whether your iPhone is connected to your home Wi-Fi network is stored for use in automations on other devices.
-  - With `Use Time` turned on, whether it is before or after sunset is stored. Disable the Automatic Appearance setting in Display & Brightness.
 
 [Automation State shortcuts](shortcuts/automation-state) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
-- `Awake and At Home Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake unless `Use Focus` is disabled in `Config`. This is always preceded by either:
+- `Awake and At Home Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake. This is always preceded by either:
   - `Awake and At Home Before Sunset`: Partial state of your home when awake during daytime (brighter lighting, etc.).
-  - `Awake and At Home Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.). Never triggered if `Use Time` is disabled in `Config`.
+  - `Awake and At Home Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.).
 - `Away`: Complete state of your home when you are away.
-- `Asleep and At Home`: Complete state of your home when you are asleep. Never triggered if `Use Focus` is disabled in `Config`.
+- `Asleep and At Home`: Complete state of your home when you are asleep
 
 In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary. 
 - iPhone joins or leaves home Wi-Fi network -> `On Arrive or Depart` (Updates Firestore with your location)
@@ -61,6 +57,7 @@ In the Automation section of Shortcuts on iOS, create Personal Automations point
 - Time of Day: Sunrise/Sunset -> `On Sunrise`/`On Sunset` (Updates Firestore with the time)
 - CarPlay: Connects/Disconnects -> `On Connect or Disconnect CarPlay`
 - Charger: Connects/Disconnects -> `On Connect or Disconnect Charger`
+- Alarm Goes Off: Any -> `Get Utility Alarm`, `Delete Utility Alarm`, `Handle Utility Alarm` ([example](./examples/Any%20Alarm%20Goes%20Off%20Example.md))
 - Alarm Is Stopped: Wake-Up -> `On Stop Wake-Up Alarm`
 - ${FOCUS}: Turned on/off -> `On Change Focus` with the current focus as text input. (Updates Firestore with your device's Focus mode–[example](./examples/On%20Change%20Focus%20Example.md))
 
