@@ -26,6 +26,7 @@ export const getShortcutsApi: (shortcutsApiConfig: ShortcutsApiConfig) => HttpsF
   }, {
     merge: true,
   }).then<void>((): void => void(0))) : request.body["operation"] === "sync focus" ? privateEnvironmentDocument["focus"] === request.body["focus"] ? response.json(privateEnvironmentDocument).end() && void(0) : response.json({
+    ...privateEnvironmentDocument,
     "focus": request.body["focus"],
     "focusPrior": privateEnvironmentDocument.focus,
   }).end() && (firestore.collection(shortcutsApiConfig.environmentCollectionPath).doc("private") as DocumentReference<PrivateEnvironmentDocument>).set({
