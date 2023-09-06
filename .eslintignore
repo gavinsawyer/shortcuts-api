@@ -1,2 +1,9 @@
+# System files
+*-debug.log
+.DS_Store
+.angular
+.idea
+.run
+dist
 node_modules
-
+tmp

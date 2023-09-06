@@ -7,7 +7,7 @@ An API and library of iOS shortcuts used to create highly detailed home automati
 ### Thesis
 Having somewhere to store and retrieve Focus mode, location, and time of day enables highly detailed home automations in HomeKit and the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](./examples/Occupancy%20Detected%20Example.md) rather than at a hard-coded time. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
 > An example of home automation using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus, turns on my apartment lights and espresso machine, and prompts Siri to tell me the weather and my first calendar events over intercom if I am at home when my wake-up alarm is stopped:
-> 
+>
 > ![On Stop Wake-Up Alarm Example](./examples/On%20Stop%20Wake-Up%20Alarm%20Example.png)
 
 > An example of home state management using the `Asleep and At Home` shortcut reminds me to charge my iPhone before going to sleep by only turning off my bedroom lights when the charger is connected:
@@ -25,20 +25,24 @@ import { HttpsFunction }          from "firebase-functions";
 import { getShortcutsApi }        from "@gavinsawyer/shortcuts-api";
 
 
-getApps().length === 0 && initializeApp();
+getApps()
+  .length === 0 && initializeApp();
 
-export const shortcutsAPI: HttpsFunction = getShortcutsApi({...});
+export const ShortcutsApi: HttpsFunction = getShortcutsApi();
 
 // Other functions...
 ```
-```ts
-export interface ShortcutsApiConfig {
-  environmentCollectionPath: string, // Firestore collection where public and private documents are saved.
-}
-```
 3. Deploy your Firebase Functions:
 
-`% firebase deploy --only functions`
+    ```
+    % firebase deploy --only functions
+    ```
+
+4. Create a Firestore Database to store public key credentials with the ID `shortcuts-api` and location matching the function deployment. It is recommended to choose either `nam5` in North America or `eur3` in Europe:
+
+    ```
+    % firebase firestore:databases:create shortcuts-api --location ${MULTI_REGION_NAME}
+    ```
 ### Usage
 Download and import all items in within the [shortcuts](shortcuts) directory to your Mac or iOS device. You may organize them into folders once imported, but it's not necessary. `Config` requires setup including:
 - Providing your home Wi-Fi network's name and the Cloud Function's URL.
@@ -51,7 +55,7 @@ Download and import all items in within the [shortcuts](shortcuts) directory to 
 - `Away`: Complete state of your home when you are away.
 - `Asleep and At Home`: Complete state of your home when you are asleep
 
-In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary. 
+In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary.
 - iPhone joins or leaves home Wi-Fi network -> `On Arrive or Depart` (Updates Firestore with your location)
 - You Choose -> `On Start or End Focus Activity` with the focus as text input. (To set your device's Focus mode programmatically–[example](./examples/On%20Start%20or%20End%20Focus%20Activity%20Example.md))
 - Time of Day: Sunrise/Sunset -> `On Sunrise`/`On Sunset` (Updates Firestore with the time)

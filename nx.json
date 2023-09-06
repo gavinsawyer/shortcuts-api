@@ -1,38 +1,40 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "gavinsawyer",
-  "affected": {
+  "$schema":            "./node_modules/nx/schemas/nx-schema.json",
+  "affected":           {
     "defaultBase": "main"
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": ["build"],
-        "accessToken": "${NX_CLOUD_ACCESS_TOKEN}"
-      }
-    }
+  "defaultProject":     "shortcuts-api",
+  "namedInputs":        {
+    "default":       [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "production":    [
+      "default"
+    ],
+    "sharedGlobals": []
   },
-  "targetDefaults": {
+  "npmScope":           "gavinsawyer",
+  "targetDefaults":     {
     "build": {
       "dependsOn": [
         "^build"
       ],
-      "inputs": [
+      "inputs":    [
         "production",
         "^production"
       ]
     }
   },
-  "defaultProject": "shortcuts-api",
-  "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
-    "production": [
-      "default"
-    ],
-    "sharedGlobals": []
+  "tasksRunnerOptions": {
+    "default": {
+      "options": {
+        "accessToken":         "${NX_CLOUD_ACCESS_TOKEN}",
+        "cacheableOperations": [
+          "build"
+        ]
+      },
+      "runner":  "@nrwl/nx-cloud"
+    }
   }
 }

@@ -1,0 +1,38 @@
+{
+  "compileOnSave":          false,
+  "compilerOptions":        {
+    "baseUrl":                            ".",
+    "declaration":                        true,
+    "emitDecoratorMetadata":              true,
+    "experimentalDecorators":             true,
+    "forceConsistentCasingInFileNames":   true,
+    "importHelpers":                      true,
+    "lib":                                [
+      "ES2020",
+      "DOM"
+    ],
+    "module":                             "ESNext",
+    "moduleResolution":                   "Node",
+    "noFallthroughCasesInSwitch":         true,
+    "noImplicitOverride":                 true,
+    "noImplicitReturns":                  true,
+    "noPropertyAccessFromIndexSignature": true,
+    "outDir":                             "dist/out-tsc",
+    "paths":                              {
+      "@gavinsawyer/shortcuts-api":  [
+        "libs/shortcuts api/src/index.ts"
+      ]
+    },
+    "rootDir":                            ".",
+    "skipDefaultLibCheck":                true,
+    "skipLibCheck":                       true,
+    "sourceMap":                          true,
+    "strict":                             true,
+    "target":                             "ESNext"
+  },
+  "exclude":                [
+    "node_modules",
+    "tmp",
+    "**/README.md"
+  ]
+}

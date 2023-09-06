@@ -1,39 +1,33 @@
 {
-  "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": [
-    "eslint-plugin-tsdoc",
-    "@nrwl/nx"
-  ],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "tsdoc/syntax": "warn",
-        "@nrwl/nx/enforce-module-boundaries": [
+      "extends": [
+        "plugin:@nx/typescript"
+      ],
+      "files":   [
+        "*.ts"
+      ],
+      "rules":   {
+        "@nx/enforce-module-boundaries": [
           "error",
           {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
+            "allow":                         [],
+            "depConstraints":                [
               {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "onlyDependOnLibsWithTags": [
+                  "*"
+                ],
+                "sourceTag":                "*"
               }
-            ]
+            ],
+            "enforceBuildableLibDependency": true
           }
         ]
       }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
     }
-  ]
+  ],
+  "plugins":   [
+    "@nx"
+  ],
+  "root":      true
 }

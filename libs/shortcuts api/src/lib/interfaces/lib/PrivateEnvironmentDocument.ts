@@ -1,4 +1,5 @@
-import { Focus } from "./focus";
+import { Focus } from "../../types";
+
 
 export interface PrivateEnvironmentDocument {
   "focus"?: Focus,

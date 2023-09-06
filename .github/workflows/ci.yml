@@ -19,10 +19,10 @@ jobs:
           key: node-modules-cache-${{ hashFiles('package-lock.json') }}
       - if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
-      - run: npx nx run build
+      - run: npx nx run-many --target build --all --parallel 1
         env:
           NX_CLOUD_ACCESS_TOKEN: '${{ secrets.NX_CLOUD_ACCESS_TOKEN }}'
-      - run: npm publish dist/libs/shortcuts-api
+      - run: npm publish "dist/libs/shortcuts api"
         env:
           NPM_ACCESS_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
         continue-on-error: true
