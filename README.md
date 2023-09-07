@@ -18,17 +18,17 @@ Having somewhere to store and retrieve Focus mode, location, and time of day ena
 
 `% npm install @gavinsawyer/shortcuts-api --save`
 
-2. Export the function by calling `getShortcutsApi` with a config object.
+2. Export the function by calling `getShortcutsApi()`.
 ```ts
-import { getApps, initializeApp } from "firebase-admin/app";
-import { HttpsFunction }          from "firebase-functions";
-import { getShortcutsApi }        from "@gavinsawyer/shortcuts-api";
+import { CallableRequestData, CallableResponseData, getShortcutsApi } from "@gavinsawyer/shortcuts-api";
+import { getApps, initializeApp }                                     from "firebase-admin/app";
+import { CallableFunction }                                           from "firebase-functions/v2/https";
 
 
 getApps()
   .length === 0 && initializeApp();
 
-export const ShortcutsApi: HttpsFunction = getShortcutsApi();
+export const ShortcutsApi: CallableFunction<CallableRequestData, Promise<CallableResponseData>> = getShortcutsApi();
 
 // Other functions...
 ```
