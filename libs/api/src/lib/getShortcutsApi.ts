@@ -1,6 +1,6 @@
-import { App }                                                          from "firebase-admin/lib/app";
-import { DocumentReference, DocumentSnapshot, Firestore, getFirestore } from "firebase-admin/lib/firestore";
-import { CallableFunction, CallableRequest, onCall }                    from "firebase-functions/lib/v2/providers/https";
+import { App }                                                          from "firebase-admin/app";
+import { DocumentReference, DocumentSnapshot, Firestore, getFirestore } from "firebase-admin/firestore";
+import { CallableFunction, CallableRequest, onCall }                    from "firebase-functions/v2/https";
 import { PrivateEnvironmentDocument, PublicEnvironmentDocument }        from "./interfaces";
 import { CallableRequestData, CallableResponseData }                    from "./types";
 
