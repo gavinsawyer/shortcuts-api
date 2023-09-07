@@ -1,14 +1,14 @@
 {
   "$schema":     "../../node_modules/nx/schemas/project-schema.json",
-  "name":        "shortcuts-api",
+  "name":        "api",
   "projectType": "library",
-  "sourceRoot":  "libs/shortcuts api/src",
+  "sourceRoot":  "libs/api/src",
   "targets":     {
     "lint":  {
       "executor": "@nx/linter:eslint",
       "options":  {
         "lintFilePatterns": [
-          "libs/shortcuts api/**/*.ts"
+          "libs/api/**/*.ts"
         ]
       },
       "outputs":  [
@@ -28,9 +28,9 @@
             "output": "."
           }
         ],
-        "main":       "libs/shortcuts api/src/index.ts",
-        "outputPath": "dist/libs/shortcuts api",
-        "tsConfig":   "libs/shortcuts api/tsconfig.lib.json"
+        "main":       "libs/api/src/index.ts",
+        "outputPath": "dist/libs/api",
+        "tsConfig":   "libs/api/tsconfig.lib.json"
       },
       "outputs":   [
         "{options.outputPath}"

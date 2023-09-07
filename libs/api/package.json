@@ -1,6 +1,6 @@
 {
   "name":         "@gavinsawyer/shortcuts-api",
-  "version":      "1.6.0",
+  "version":      "1.7.0",
   "author":       {
     "name":  "Gavin Sawyer",
     "email": "g@vinsawyer.dev",
@@ -10,7 +10,7 @@
   "repository":   {
     "type":      "git",
     "url":       "git+https://github.com/gavinsawyer/shortcuts-api.git",
-    "directory": "libs/shortcuts api"
+    "directory": "libs/api"
   },
   "private":      false,
   "dependencies": {

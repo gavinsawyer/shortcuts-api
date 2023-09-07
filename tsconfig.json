@@ -1,6 +1,6 @@
 {
-  "compileOnSave":          false,
-  "compilerOptions":        {
+  "compileOnSave":   false,
+  "compilerOptions": {
     "baseUrl":                            ".",
     "declaration":                        true,
     "emitDecoratorMetadata":              true,
@@ -19,8 +19,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "outDir":                             "dist/out-tsc",
     "paths":                              {
-      "@gavinsawyer/shortcuts-api":  [
-        "libs/shortcuts api/src/index.ts"
+      "@gavinsawyer/shortcuts-api": [
+        "libs/api/src/index.ts"
       ]
     },
     "rootDir":                            ".",
@@ -30,7 +30,7 @@
     "strict":                             true,
     "target":                             "ESNext"
   },
-  "exclude":                [
+  "exclude":         [
     "node_modules",
     "tmp",
     "**/README.md"

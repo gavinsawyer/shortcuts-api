@@ -22,7 +22,7 @@ jobs:
       - run: npx nx run-many --target build --all --parallel 1
         env:
           NX_CLOUD_ACCESS_TOKEN: '${{ secrets.NX_CLOUD_ACCESS_TOKEN }}'
-      - run: npm publish "dist/libs/shortcuts api"
+      - run: npm publish "dist/libs/api"
         env:
           NPM_ACCESS_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
         continue-on-error: true

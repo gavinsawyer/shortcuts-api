@@ -1,6 +1,6 @@
 {
   "name":            "@shortcuts-api/source",
-  "version":         "1.6.0",
+  "version":         "1.7.0",
   "author":          {
     "name":  "Gavin Sawyer",
     "email": "g@vinsawyer.dev",
@@ -14,7 +14,7 @@
     "type": "git",
     "url":  "git+https://github.com/gavinsawyer/shortcuts-api.git"
   },
-  "private":      true,
+  "private":         true,
   "devDependencies": {
     "@nx/eslint-plugin":                "^16.7.4",
     "@nx/js":                           "^16.7.4",
