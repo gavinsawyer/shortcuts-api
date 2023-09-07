@@ -2,6 +2,7 @@
   "overrides": [
     {
       "extends": [
+        "plugin:@typescript-eslint/recommended",
         "plugin:@nx/typescript"
       ],
       "files":   [
@@ -26,8 +27,11 @@
       }
     }
   ],
+  "parser":    "@typescript-eslint/parser",
   "plugins":   [
-    "@nx"
+    "@typescript-eslint",
+    "@nx",
+    "eslint-plugin-tsdoc"
   ],
   "root":      true
 }

@@ -8,11 +8,9 @@
     "forceConsistentCasingInFileNames":   true,
     "importHelpers":                      true,
     "lib":                                [
-      "ES2020",
-      "DOM"
+      "ESNext"
     ],
-    "module":                             "ESNext",
-    "moduleResolution":                   "Node",
+    "module":                             "CommonJS",
     "noFallthroughCasesInSwitch":         true,
     "noImplicitOverride":                 true,
     "noImplicitReturns":                  true,
@@ -30,6 +28,9 @@
     "strict":                             true,
     "target":                             "ESNext"
   },
+  "include":         [
+    "!**/*.ts"
+  ],
   "exclude":         [
     "node_modules",
     "tmp",

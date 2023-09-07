@@ -3,7 +3,7 @@
   "affected":           {
     "defaultBase": "main"
   },
-  "defaultProject":     "shortcuts-api",
+  "defaultProject":     "api",
   "namedInputs":        {
     "default":       [
       "{projectRoot}/**/*",
@@ -34,7 +34,7 @@
           "build"
         ]
       },
-      "runner":  "@nrwl/nx-cloud"
+      "runner":  "nx-cloud"
     }
   }
 }
