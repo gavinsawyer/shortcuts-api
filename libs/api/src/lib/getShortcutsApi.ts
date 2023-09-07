@@ -8,7 +8,7 @@ import { CallableRequestData, CallableResponseData }                    from "./
 // noinspection JSUnusedGlobalSymbols
 /**
  * @param app - An optional {@link App} to use with Firestore.
- * @returns An {@link HttpsFunction} which will need to be exported from your Firebase Functions package index.
+ * @returns - A {@link CallableFunction} which will need to be exported from your Firebase Functions package index.
  */
 export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestData, Promise<CallableResponseData>> = (app?: App): CallableFunction<CallableRequestData, Promise<CallableResponseData>> => onCall(
   {
