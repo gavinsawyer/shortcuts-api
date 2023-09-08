@@ -23,6 +23,16 @@
       "options":   {
         "assets":     [
           {
+            "glob":   "firestore.shortcuts-api.indexes.json",
+            "input":  ".",
+            "output": "."
+          },
+          {
+            "glob":   "firestore.shortcuts-api.rules",
+            "input":  ".",
+            "output": "."
+          },
+          {
             "glob":   "README.md",
             "input":  ".",
             "output": "."
