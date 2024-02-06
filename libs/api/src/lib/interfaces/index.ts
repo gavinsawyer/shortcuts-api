@@ -1,2 +1,3 @@
-export * from "./lib/PrivateEnvironmentDocument";
-export * from "./lib/PublicEnvironmentDocument";
+export * from "./lib/PrivateDocument";
+export * from "./lib/PublicDocument";
+export * from "./lib/User";

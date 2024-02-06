@@ -55,7 +55,7 @@ Download and import all items in within the [shortcuts](shortcuts) directory to 
 - `Away`: Complete state of your home when you are away.
 - `Asleep and At Home`: Complete state of your home when you are asleep
 
-In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private Environment` Dictionary.
+In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private User` Dictionary.
 - iPhone joins or leaves home Wi-Fi network -> `On Arrive or Depart` (Updates Firestore with your location)
 - You Choose -> `On Start or End Focus Activity` with the focus as text input. (To set your device's Focus mode programmatically–[example](./examples/On%20Start%20or%20End%20Focus%20Activity%20Example.md))
 - Time of Day: Sunrise/Sunset -> `On Sunrise`/`On Sunset` (Updates Firestore with the time)
@@ -68,12 +68,12 @@ In the Automation section of Shortcuts on iOS, create Personal Automations point
 
 The API stores data in two documents so that the Focus mode can be displayed on a personal website in real-time. The document intended to be made public only has `focus`, while a separate document used internally also has `focusPrior`, `location`, and `time`:
 ```ts
-export interface PublicEnvironmentDocument {
+export interface PublicDocument {
   "focus"?: Focus,
 }
 ```
 ```ts
-export interface PrivateEnvironmentDocument {
+export interface PrivateDocument {
   "focus"?: Focus,
   "focusPrior"?: Focus,
   "location"?: "At Home" | "Away",

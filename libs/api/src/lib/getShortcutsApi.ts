@@ -1,7 +1,7 @@
 import { App }                                                          from "firebase-admin/app";
 import { DocumentReference, DocumentSnapshot, Firestore, getFirestore } from "firebase-admin/firestore";
 import { CallableFunction, CallableRequest, onCall }                    from "firebase-functions/v2/https";
-import { PrivateEnvironmentDocument, PublicEnvironmentDocument }        from "./interfaces";
+import { PrivateDocument, PublicDocument, User }                        from "./interfaces";
 import { CallableRequestData, CallableResponseData }                    from "./types";
 
 
@@ -15,118 +15,358 @@ export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestDat
     enforceAppCheck: false,
     ingressSettings: "ALLOW_ALL",
   },
-  async (callableRequest: CallableRequest<CallableRequestData>): Promise<CallableResponseData> => callableRequest.rawRequest.protocol === "https" ? callableRequest.data.accessToken ? callableRequest.data.accessToken === process.env["SHORTCUTS_API_ACCESS_TOKEN"] ? callableRequest.data.operation ? ((firestore: Firestore): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).get().then<CallableResponseData>(
-    (privateEnvironmentDocumentSnapshot: DocumentSnapshot<PrivateEnvironmentDocument>): Promise<CallableResponseData> => (async (privateEnvironmentDocument: PrivateEnvironmentDocument | null): Promise<CallableResponseData> => privateEnvironmentDocument ? callableRequest.data.operation === "get private environment document" ? {
-      operation:                  callableRequest.data.operation,
-      privateEnvironmentDocument: privateEnvironmentDocument,
-      success:                    true,
-    } : callableRequest.data.operation === "revert focus" ? ((functionRequest): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).set(
-      {
-        focus:      privateEnvironmentDocument.focusPrior,
-        focusPrior: privateEnvironmentDocument.focus,
+  async (callableRequest: CallableRequest<CallableRequestData>): Promise<CallableResponseData> => callableRequest.rawRequest.protocol === "https" ? callableRequest.data.accessToken ? callableRequest.data.accessToken === process.env["SHORTCUTS_API_ACCESS_TOKEN"] ? callableRequest.data.operation ? ((firestore: Firestore): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).get().then<CallableResponseData>(
+    (privateDocumentSnapshot: DocumentSnapshot<PrivateDocument>): Promise<CallableResponseData> => (async (privateDocument: PrivateDocument | null): Promise<CallableResponseData> => privateDocument ? callableRequest.data.operation === "get private document" ? {
+      operation:       callableRequest.data.operation,
+      privateDocument: privateDocument,
+      states:          {
+        somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+        everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
       },
+      success:         true,
+    } : callableRequest.data.username ? privateDocument.users[callableRequest.data.username] ? callableRequest.data.operation === "revert focus" ? ((functionRequest): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).set(
       {
-        merge: true,
-      },
-    ).then<CallableResponseData>(
-      (): Promise<CallableResponseData> => (firestore.collection("environment").doc("public") as DocumentReference<PublicEnvironmentDocument>).set(
-        {
-          focus: privateEnvironmentDocument.focusPrior,
-        },
-        {
-          merge: true,
-        },
-      ).then<CallableResponseData>(
-        (): CallableResponseData => ({
-          operation:                  functionRequest.operation,
-          privateEnvironmentDocument: {
-            ...privateEnvironmentDocument,
-            focus:      privateEnvironmentDocument.focusPrior,
-            focusPrior: privateEnvironmentDocument.focus,
+        users: {
+          [functionRequest.username]: {
+            focus:      privateDocument.users[functionRequest.username].focusPrior,
+            focusPrior: privateDocument.users[functionRequest.username].focus,
           },
-          success:                    true,
-        }),
-      ),
-    ))(callableRequest.data) : callableRequest.data.operation === "sync focus" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.focus === privateEnvironmentDocument.focus ? {
-      operation:                  functionRequest.operation,
-      privateEnvironmentDocument: privateEnvironmentDocument,
-      success:                    true,
-    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).set(
-      {
-        focus:      functionRequest.focus,
-        focusPrior: privateEnvironmentDocument.focus,
+        },
       },
       {
         merge: true,
       },
     ).then<CallableResponseData>(
-      (): Promise<CallableResponseData> => (firestore.collection("environment").doc("public") as DocumentReference<PublicEnvironmentDocument>).set(
+      async (): Promise<CallableResponseData> => privateDocument.users[functionRequest.username].publicFields?.includes("focus") ? (firestore.collection("environment").doc("public") as DocumentReference<PublicDocument>).set(
         {
-          "focus": functionRequest.focus,
+          users: {
+            [functionRequest.username]: {
+              focus: privateDocument.users[functionRequest.username].focusPrior,
+            },
+          },
         },
         {
           merge: true,
         },
       ).then<CallableResponseData>(
         (): CallableResponseData => ({
-          operation:                  functionRequest.operation,
-          privateEnvironmentDocument: {
-            ...privateEnvironmentDocument,
+          operation:       functionRequest.operation,
+          privateDocument: {
+            users: {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                focus:      privateDocument.users[functionRequest.username].focusPrior,
+                focusPrior: privateDocument.users[functionRequest.username].focus,
+              },
+            },
+          },
+          states:          {
+            somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+            everybodyAtHomeAsleep: Object.values<User>(
+              {
+                ...privateDocument.users,
+                [functionRequest.username]: {
+                  ...privateDocument.users[functionRequest.username],
+                  focus: privateDocument.users[functionRequest.username].focusPrior,
+                },
+              },
+            ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+          },
+          success:         true,
+        }),
+      ) : {
+        operation:       functionRequest.operation,
+        privateDocument: {
+          users: {
+            ...privateDocument.users,
+            [functionRequest.username]: {
+              ...privateDocument.users[functionRequest.username],
+              focus:      privateDocument.users[functionRequest.username].focusPrior,
+              focusPrior: privateDocument.users[functionRequest.username].focus,
+            },
+          },
+        },
+        states:          {
+          somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+          everybodyAtHomeAsleep: Object.values<User>(
+            {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                focus: privateDocument.users[functionRequest.username].focusPrior,
+              },
+            },
+          ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+        },
+        success:         true,
+      },
+    ))(callableRequest.data) : callableRequest.data.operation === "sync focus" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.focus === privateDocument.users[functionRequest.username].focus ? {
+      operation:       functionRequest.operation,
+      privateDocument: privateDocument,
+      states:          {
+        somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+        everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+      },
+      success:         true,
+    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).set(
+      {
+        users: {
+          [functionRequest.username]: {
             focus:      functionRequest.focus,
-            focusPrior: privateEnvironmentDocument.focus,
+            focusPrior: privateDocument.users[functionRequest.username].focus,
           },
-          success:                    true,
+        },
+      },
+      {
+        merge: true,
+      },
+    ).then<CallableResponseData>(
+      async (): Promise<CallableResponseData> => privateDocument.users[functionRequest.username].publicFields?.includes("focus") ? (firestore.collection("environment").doc("public") as DocumentReference<PublicDocument>).set(
+        {
+          users: {
+            [functionRequest.username]: {
+              focus: functionRequest.focus,
+            },
+          },
+        },
+        {
+          merge: true,
+        },
+      ).then<CallableResponseData>(
+        (): CallableResponseData => ({
+          operation:       functionRequest.operation,
+          privateDocument: {
+            users: {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                focus:      functionRequest.focus,
+                focusPrior: privateDocument.users[functionRequest.username].focus,
+              },
+            },
+          },
+          states:          {
+            somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+            everybodyAtHomeAsleep: Object.values<User>(
+              {
+                ...privateDocument.users,
+                [functionRequest.username]: {
+                  ...privateDocument.users[functionRequest.username],
+                  focus: functionRequest.focus,
+                },
+              },
+            ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+          },
+          success:         true,
         }),
-      ),
-    ))(callableRequest.data) : callableRequest.data.operation === "sync location" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.location === privateEnvironmentDocument.location ? {
-      operation:                  functionRequest.operation,
-      privateEnvironmentDocument: privateEnvironmentDocument,
-      success:                    true,
-    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).set(
+      ) : {
+        operation:       functionRequest.operation,
+        privateDocument: {
+          users: {
+            ...privateDocument.users,
+            [functionRequest.username]: {
+              ...privateDocument.users[functionRequest.username],
+              focus:      functionRequest.focus,
+              focusPrior: privateDocument.users[functionRequest.username].focus,
+            },
+          },
+        },
+        states:          {
+          somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+          everybodyAtHomeAsleep: Object.values<User>(
+            {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                focus: functionRequest.focus,
+              },
+            },
+          ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+        },
+        success:         true,
+      },
+    ))(callableRequest.data) : callableRequest.data.operation === "sync location" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.location === privateDocument.users[functionRequest.username].location ? {
+      operation:       functionRequest.operation,
+      privateDocument: privateDocument,
+      states:          {
+        somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+        everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+      },
+      success:         true,
+    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).set(
       {
-        location: functionRequest.location,
+        users: {
+          [functionRequest.username]: {
+            location: functionRequest.location,
+          },
+        },
       },
       {
         merge: true,
       },
     ).then<CallableResponseData>(
-      (): CallableResponseData => ({
-        operation:                  functionRequest.operation,
-        privateEnvironmentDocument: {
-          ...privateEnvironmentDocument,
-          location: functionRequest.location,
+      async (): Promise<CallableResponseData> => privateDocument.users[functionRequest.username].publicFields?.includes("location") ? (firestore.collection("environment").doc("public") as DocumentReference<PublicDocument>).set(
+        {
+          users: {
+            [functionRequest.username]: {
+              location: functionRequest.location,
+            },
+          },
         },
-        success:                    true,
-      }),
-    ))(callableRequest.data) : callableRequest.data.operation === "sync time" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.time === privateEnvironmentDocument.time ? {
-      operation:                  functionRequest.operation,
-      privateEnvironmentDocument: privateEnvironmentDocument,
-      success:                    true,
-    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateEnvironmentDocument>).set(
+        {
+          merge: true,
+        },
+      ).then<CallableResponseData>(
+        (): CallableResponseData => ({
+          operation:       functionRequest.operation,
+          privateDocument: {
+            users: {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                location: functionRequest.location,
+              },
+            },
+          },
+          states:          {
+            somebodyAtHome:        Object.values<User>(
+              {
+                ...privateDocument.users,
+                [functionRequest.username]: {
+                  ...privateDocument.users[functionRequest.username],
+                  location: functionRequest.location,
+                },
+              },
+            ).some((user: User): boolean => user.location === "At Home"),
+            everybodyAtHomeAsleep: Object.values<User>(
+              {
+                ...privateDocument.users,
+                [functionRequest.username]: {
+                  ...privateDocument.users[functionRequest.username],
+                  location: functionRequest.location,
+                },
+              },
+            ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+          },
+          success:         true,
+        }),
+      ) : {
+        operation:       functionRequest.operation,
+        privateDocument: {
+          users: {
+            ...privateDocument.users,
+            [functionRequest.username]: {
+              ...privateDocument.users[functionRequest.username],
+              location: functionRequest.location,
+            },
+          },
+        },
+        states:          {
+          somebodyAtHome:        Object.values<User>(
+            {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                location: functionRequest.location,
+              },
+            },
+          ).some((user: User): boolean => user.location === "At Home"),
+          everybodyAtHomeAsleep: Object.values<User>(
+            {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                location: functionRequest.location,
+              },
+            },
+          ).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+        },
+        success:         true,
+      },
+    ))(callableRequest.data) : callableRequest.data.operation === "sync time" ? (async (functionRequest): Promise<CallableResponseData> => functionRequest.time === privateDocument.users[functionRequest.username].time ? {
+      operation:       functionRequest.operation,
+      privateDocument: privateDocument,
+      states:          {
+        somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+        everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+      },
+      success:         true,
+    } : (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).set(
       {
-        time: functionRequest.time,
+        users: {
+          [functionRequest.username]: {
+            time: functionRequest.time,
+          },
+        },
       },
       {
         merge: true,
       },
     ).then<CallableResponseData>(
-      (): CallableResponseData => ({
-        operation:                  functionRequest.operation,
-        privateEnvironmentDocument: {
-          ...privateEnvironmentDocument,
-          time: functionRequest.time,
+      async (): Promise<CallableResponseData> => privateDocument.users[functionRequest.username].publicFields?.includes("time") ? (firestore.collection("environment").doc("public") as DocumentReference<PublicDocument>).set(
+        {
+          users: {
+            [functionRequest.username]: {
+              time: functionRequest.time,
+            },
+          },
         },
-        success:                    true,
-      }),
+        {
+          merge: true,
+        },
+      ).then<CallableResponseData>(
+        (): CallableResponseData => ({
+          operation:       functionRequest.operation,
+          privateDocument: {
+            users: {
+              ...privateDocument.users,
+              [functionRequest.username]: {
+                ...privateDocument.users[functionRequest.username],
+                time: functionRequest.time,
+              },
+            },
+          },
+          states:          {
+            somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+            everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+          },
+          success:         true,
+        }),
+      ) : {
+        operation:       functionRequest.operation,
+        privateDocument: {
+          users: {
+            ...privateDocument.users,
+            [functionRequest.username]: {
+              ...privateDocument.users[functionRequest.username],
+              time: functionRequest.time,
+            },
+          },
+        },
+        states:          {
+          somebodyAtHome:        Object.values<User>(privateDocument.users).some((user: User): boolean => user.location === "At Home"),
+          everybodyAtHomeAsleep: Object.values<User>(privateDocument.users).filter<User>((user: User): user is User => user.location === "At Home").every<User>((user: User): user is User => user.focus === "Sleep"),
+        },
+        success:         true,
+      },
     ))(callableRequest.data) : {
       code:    "invalid operation",
-      message: "The operation provided was invalid.",
+      message: "The operation provided is invalid.",
       success: false,
     } : {
-      code:    "missing private environment document",
-      message: "The private environment document is missing.",
+      code:    "missing private document",
+      message: "The private document is missing.",
       success: false,
-    })(privateEnvironmentDocumentSnapshot.data() || null),
+    } : {
+      code:    "missing username",
+      message: "The username is missing.",
+      success: false,
+    } : {
+      code:    "invalid username",
+      message: "The username provided is invalid.",
+      success: false,
+    })(privateDocumentSnapshot.data() || null),
   ))(
     app ? getFirestore(
       app,
@@ -138,7 +378,7 @@ export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestDat
     success: false,
   } : {
     code:    "incorrect access token",
-    message: "The access token provided was incorrect.",
+    message: "The access token provided is incorrect.",
     success: false,
   } : {
     code:    "missing access token",
@@ -146,7 +386,7 @@ export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestDat
     success: false,
   } : {
     code:    "insecure request",
-    message: "The request was insecure.",
+    message: "The request is insecure.",
     success: false,
   },
 );

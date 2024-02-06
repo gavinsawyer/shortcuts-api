@@ -3,6 +3,7 @@
 .DS_Store
 .angular
 .idea
+.nx
 .run
 dist
 node_modules

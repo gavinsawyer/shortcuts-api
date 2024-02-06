@@ -1,4 +1,4 @@
-import { Focus, CallableOperation, Location, Time } from "../../types";
+import { CallableOperation, Focus, Location, Time } from "../../types";
 
 
 interface UnknownCallableRequestData {
@@ -6,27 +6,31 @@ interface UnknownCallableRequestData {
   "operation": CallableOperation,
 }
 
-interface GetPrivateEnvironmentDocumentCallableRequestData extends UnknownCallableRequestData {
-  "operation": "get private environment document",
+interface GetPrivateDocumentCallableRequestData extends UnknownCallableRequestData {
+  "operation": "get private document",
 }
 
-interface RevertFocusCallableRequestData extends UnknownCallableRequestData {
+interface UserSpecificCallableRequestData extends UnknownCallableRequestData {
+  "username": string,
+}
+
+interface RevertFocusCallableRequestData extends UserSpecificCallableRequestData {
   "operation": "revert focus",
 }
 
-interface SyncFocusCallableRequestData extends UnknownCallableRequestData {
+interface SyncFocusCallableRequestData extends UserSpecificCallableRequestData {
   "focus": Focus,
   "operation": "sync focus",
 }
 
-interface SyncLocationCallableRequestData extends UnknownCallableRequestData {
+interface SyncLocationCallableRequestData extends UserSpecificCallableRequestData {
   "location": Location,
   "operation": "sync location",
 }
 
-interface SyncTimeCallableRequestData extends UnknownCallableRequestData {
+interface SyncTimeCallableRequestData extends UserSpecificCallableRequestData {
   "time": Time,
   "operation": "sync time",
 }
 
-export type CallableRequestData = GetPrivateEnvironmentDocumentCallableRequestData | RevertFocusCallableRequestData | SyncFocusCallableRequestData | SyncLocationCallableRequestData | SyncTimeCallableRequestData;
+export type CallableRequestData = GetPrivateDocumentCallableRequestData | RevertFocusCallableRequestData | SyncFocusCallableRequestData | SyncLocationCallableRequestData | SyncTimeCallableRequestData;

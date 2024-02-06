@@ -1,5 +1,5 @@
-import { PrivateEnvironmentDocument } from "../../interfaces";
-import { CallableOperation }          from "../../types";
+import { PrivateDocument }   from "../../interfaces";
+import { CallableOperation } from "../../types";
 
 
 interface UnknownCallableResponseData {
@@ -7,19 +7,23 @@ interface UnknownCallableResponseData {
 }
 
 interface UnknownCallableResponseDataSuccessful extends UnknownCallableResponseData {
-  "privateEnvironmentDocument": PrivateEnvironmentDocument,
+  "privateDocument": PrivateDocument,
   "operation": CallableOperation,
+  "states": {
+    "somebodyAtHome": boolean,
+    "everybodyAtHomeAsleep": boolean,
+  },
   "success": true,
 }
 
 interface CallableResponseDataUnsuccessful extends UnknownCallableResponseData {
-  "code": "incorrect access token" | "insecure request" | "invalid operation" | "missing access token" | "missing operation" | "missing private environment document",
-  "message": "The access token provided was incorrect." | "The request was insecure." | "The operation provided was invalid." | "The access token is missing." | "The operation is missing." | "The private environment document is missing.",
+  "code": "incorrect access token" | "insecure request" | "invalid operation" | "invalid username" | "missing access token" | "missing operation" | "missing private document" | "missing username",
+  "message": "The access token provided is incorrect." | "The request is insecure." | "The operation provided is invalid." | "The username provided is invalid." | "The access token is missing." | "The operation is missing." | "The private document is missing." | "The username is missing.",
   "success": false,
 }
 
-interface GetPrivateEnvironmentDocumentCallableResponseDataSuccessful extends UnknownCallableResponseDataSuccessful {
-  "operation": "get private environment document",
+interface GetPrivateDocumentCallableResponseDataSuccessful extends UnknownCallableResponseDataSuccessful {
+  "operation": "get private document",
 }
 
 interface RevertFocusCallableResponseDataSuccessful extends UnknownCallableResponseDataSuccessful {
@@ -38,4 +42,4 @@ interface SyncTimeCallableResponseDataSuccessful extends UnknownCallableResponse
   "operation": "sync time",
 }
 
-export type CallableResponseData = GetPrivateEnvironmentDocumentCallableResponseDataSuccessful | RevertFocusCallableResponseDataSuccessful | SyncFocusCallableResponseDataSuccessful | SyncLocationCallableResponseDataSuccessful | SyncTimeCallableResponseDataSuccessful | CallableResponseDataUnsuccessful;
+export type CallableResponseData = GetPrivateDocumentCallableResponseDataSuccessful | RevertFocusCallableResponseDataSuccessful | SyncFocusCallableResponseDataSuccessful | SyncLocationCallableResponseDataSuccessful | SyncTimeCallableResponseDataSuccessful | CallableResponseDataUnsuccessful;
