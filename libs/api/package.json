@@ -1,6 +1,6 @@
 {
   "name":         "@gavinsawyer/shortcuts-api",
-  "version":      "2.0.0-next3",
+  "version":      "2.0.0",
   "author":       {
     "name":  "Gavin Sawyer",
     "email": "g@vinsawyer.dev",

@@ -4,6 +4,9 @@ An API and library of iOS shortcuts used to create highly detailed home automati
 [![GitHub workflow status](https://img.shields.io/github/actions/workflow/status/gavinsawyer/shortcuts-api/ci.yml)](https://github.com/gavinsawyer/shortcuts-api/actions/workflows/ci.yml)
 [![ShortcutsAPI version](https://img.shields.io/npm/v/@gavinsawyer/shortcuts-api?logo=npm)](https://www.npmjs.com/package/@gavinsawyer/shortcuts-api)
 [![Firebase-Functions version](https://img.shields.io/npm/dependency-version/@gavinsawyer/shortcuts-api/firebase-functions?logo=firebase)](https://www.npmjs.com/package/firebase-functions)
+
+🎉 Multi-user support is here in ^2.0.0!
+
 ### Thesis
 Having somewhere to store and retrieve Focus mode, location, and time of day enables highly detailed home automations in HomeKit and the native iOS app Shortcuts. The initial problem this aimed to solve was [disabling motion-activated lights while in Sleep Focus](./examples/Occupancy%20Detected%20Example.md) rather than at a hard-coded time. This was impossible as Home Automations run on tvOS devices which don't currently have access to the user's Focus mode. The final product is capable of doing much more, though:
 > An example of home automation using the `On Stop Wake-Up Alarm` shortcut turns off my Sleep Focus, turns on my apartment lights and espresso machine, and prompts Siri to tell me the weather and my first calendar events over intercom if I am at home when my wake-up alarm is stopped:
@@ -16,22 +19,26 @@ Having somewhere to store and retrieve Focus mode, location, and time of day ena
 ### Deployment
 1. From your Firebase Functions package root, run:
 
-`% npm install @gavinsawyer/shortcuts-api --save`
+    ```
+    % npm install @gavinsawyer/shortcuts-api --save`
+    ```
 
-2. Export the function by calling `getShortcutsApi()`.
-```ts
-import { CallableRequestData, CallableResponseData, getShortcutsApi } from "@gavinsawyer/shortcuts-api";
-import { getApps, initializeApp }                                     from "firebase-admin/app";
-import { CallableFunction }                                           from "firebase-functions/v2/https";
+2. Export the function by calling `getShortcutsApi()`:
+
+    ```ts
+    import { CallableRequestData, CallableResponseData, getShortcutsApi } from "@gavinsawyer/shortcuts-api";
+    import { getApps, initializeApp }                                     from "firebase-admin/app";
+    import { CallableFunction }                                           from "firebase-functions/v2/https";
 
 
-getApps()
-  .length === 0 && initializeApp();
+    getApps()
+      .length === 0 && initializeApp();
 
-export const ShortcutsApi: CallableFunction<CallableRequestData, Promise<CallableResponseData>> = getShortcutsApi();
+    export const ShortcutsApi: CallableFunction<CallableRequestData, Promise<CallableResponseData>> = getShortcutsApi();
 
-// Other functions...
-```
+    // Other functions...
+    ```
+
 3. Deploy your Firebase Functions:
 
     ```
@@ -43,19 +50,46 @@ export const ShortcutsApi: CallableFunction<CallableRequestData, Promise<Callabl
     ```
     % firebase firestore:databases:create shortcuts-api --location ${MULTI_REGION_NAME}
     ```
+
+5. Populate the Firestore database with a collection with ID `"environment"` and a document with ID `"private"`. This document should match the `PrivateDocument` interface described below. Include each resident of your home with an object under users:
+
+    ```json5
+    {
+      "environment": {                  // Collection
+        "private": {                    // Document
+          "users": {                    // map
+            "Gavin": {                  // map
+              "focus": "Developing",    // string
+              "focusPrior": "Personal", // string
+              "location": "At Home",    // string
+              "time": "Day"             // string
+            }
+          }
+        }
+      }
+    }
+    ```
+
 ### Usage
 Download and import all items in within the [shortcuts](shortcuts) directory to your Mac or iOS device. You may organize them into folders once imported, but it's not necessary. `Config` requires setup including:
-- Providing your home Wi-Fi network's name and the Cloud Function's URL.
+- Providing your home Wi-Fi network's name, the Cloud Function's URL, and the username as it appears in Firestore ("Gavin" in code sample above).
 - Creating an `Access Token`
 
-[Automation State shortcuts](shortcuts/automation-state) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
-- `Awake and At Home Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake. This is always preceded by either:
-  - `Awake and At Home Before Sunset`: Partial state of your home when awake during daytime (brighter lighting, etc.).
-  - `Awake and At Home Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.).
+[State shortcuts](shortcuts/States) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
+- `At Home and Awake Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake. This is always preceded by either:
+  - `At Home and Awake Before Sunset`: Partial state of your home when awake during daytime (brighter lighting, etc.).
+  - `At Home and Awake Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.).
+- `At Home and Asleep`: Complete state of your home when you are asleep
 - `Away`: Complete state of your home when you are away.
-- `Asleep and At Home`: Complete state of your home when you are asleep
 
-In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/automation-triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private User` Dictionary.
+Additional [Shared State shortcuts](shortcuts/Shared%20States) are available in ^2.0.0 for shared homes! These are used the same as [State shortcuts](shortcuts/States), but apply to devices multiple people use such as thermostats and lights in common areas.
+- `Somebody At Home and Awake Anytime`: Partial state of your home when somebody is awake at any time (preferred temp, etc.). Only triggered when somebody is awake. This is always preceded by either:
+  - `Somebody At Home and Awake Before Sunset`: Partial state of your home when somebody is awake during daytime (brighter lighting, etc.).
+  - `Somebody At Home and Awake Before Sunrise`: Partial state of your home when somebody is awake during nighttime (dimmer lighting, etc.).
+- `Everybody At Home Asleep`: Complete state of your home when everybody is asleep
+- `Everybody Away`: Complete state of your home when everybody is away.
+
+In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/Automation%20Triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private User` Dictionary.
 - iPhone joins or leaves home Wi-Fi network -> `On Arrive or Depart` (Updates Firestore with your location)
 - You Choose -> `On Start or End Focus Activity` with the focus as text input. (To set your device's Focus mode programmatically–[example](./examples/On%20Start%20or%20End%20Focus%20Activity%20Example.md))
 - Time of Day: Sunrise/Sunset -> `On Sunrise`/`On Sunset` (Updates Firestore with the time)
@@ -66,18 +100,28 @@ In the Automation section of Shortcuts on iOS, create Personal Automations point
 - ${FOCUS}: Turned on/off -> `On Change Focus` with the current focus as text input. (Updates Firestore with your device's Focus mode–[example](./examples/On%20Change%20Focus%20Example.md))
 
 
-The API stores data in two documents so that the Focus mode can be displayed on a personal website in real-time. The document intended to be made public only has `focus`, while a separate document used internally also has `focusPrior`, `location`, and `time`:
+The API stores data in documents with IDs `"private"` and `"public"` so that specified fields can be displayed on a personal website in real-time. The public document only has fields for each user specified by the `publicFields` array in the private document:
 ```ts
 export interface PublicDocument {
-  "focus"?: Focus,
+  "users": {
+    [key: string]: Partial<User>,
+  },
 }
 ```
 ```ts
 export interface PrivateDocument {
+  "users": {
+    [key: string]: User,
+  },
+}
+```
+```ts
+export interface User {
   "focus"?: Focus,
   "focusPrior"?: Focus,
-  "location"?: "At Home" | "Away",
-  "time"?: "Day" | "Night",
+  "location"?: Location,
+  "publicFields"?: ("focus" | "location" | "time")[]
+  "time"?: Time,
 }
 ```
 Currently supported Focus modes:
