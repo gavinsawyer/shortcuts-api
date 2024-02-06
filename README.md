@@ -76,17 +76,17 @@ Download and import all items in within the [shortcuts](shortcuts) directory to 
 - Creating an `Access Token`
 
 [State shortcuts](shortcuts/States) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
-- `At Home and Awake Anytime`: Partial state of your home when awake at any time (preferred temp, etc.). Only triggered when you are awake. This is always preceded by either:
-  - `At Home and Awake Before Sunset`: Partial state of your home when awake during daytime (brighter lighting, etc.).
-  - `At Home and Awake Before Sunrise`: Partial state of your home when awake during nighttime (dimmer lighting, etc.).
-- `At Home and Asleep`: Complete state of your home when you are asleep
+- `At Home and Awake Anytime`: Partial state of your home when you are at home and awake at any time (preferred temp, etc.). This is always preceded by either:
+  - `At Home and Awake Before Sunset`: Partial state of your home when you are at home and awake during daytime (brighter lighting, etc.).
+  - `At Home and Awake Before Sunrise`: Partial state of your home when you are at home and awake during nighttime (dimmer lighting, etc.).
+- `At Home and Asleep`: Complete state of your home when you are at home and asleep
 - `Away`: Complete state of your home when you are away.
 
 Additional [Shared State shortcuts](shortcuts/Shared%20States) are available in ^2.0.0 for shared homes! These are used the same as [State shortcuts](shortcuts/States), but apply to devices multiple people use such as thermostats and lights in common areas.
-- `Somebody At Home and Awake Anytime`: Partial state of your home when somebody is awake at any time (preferred temp, etc.). Only triggered when somebody is awake. This is always preceded by either:
-  - `Somebody At Home and Awake Before Sunset`: Partial state of your home when somebody is awake during daytime (brighter lighting, etc.).
-  - `Somebody At Home and Awake Before Sunrise`: Partial state of your home when somebody is awake during nighttime (dimmer lighting, etc.).
-- `Everybody At Home Asleep`: Complete state of your home when everybody is asleep
+- `Somebody At Home and Awake Anytime`: Partial state of your home when somebody at home is awake at any time (preferred temp, etc.). This is always preceded by either:
+  - `Somebody At Home and Awake Before Sunset`: Partial state of your home when somebody at home is awake during daytime (brighter lighting, etc.).
+  - `Somebody At Home and Awake Before Sunrise`: Partial state of your home when somebody at home is awake during nighttime (dimmer lighting, etc.).
+- `Everybody At Home Asleep`: Complete state of your home when everybody at home is asleep
 - `Everybody Away`: Complete state of your home when everybody is away.
 
 In the Automation section of Shortcuts on iOS, create Personal Automations pointing to the [Automation Trigger shortcuts](shortcuts/Automation%20Triggers) for each of the following events. These shortcuts can all be customized with additional actions based on focus, location, and time of day by accessing the `Private User` Dictionary.

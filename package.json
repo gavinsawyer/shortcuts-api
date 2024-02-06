@@ -1,29 +1,29 @@
 {
-  "name": "@shortcuts-api/source",
-  "version": "2.0.0",
-  "author": {
-    "name": "Gavin Sawyer",
+  "name":            "@shortcuts-api/source",
+  "version":         "2.0.1",
+  "author":          {
+    "name":  "Gavin Sawyer",
     "email": "g@vinsawyer.dev",
-    "url": "https://gavinsawyer.dev"
+    "url":   "https://gavinsawyer.dev"
   },
-  "scripts": {
+  "scripts":         {
     "build": "npx nx run-many --target build --all --parallel 1"
   },
-  "license": "MIT",
-  "repository": {
+  "license":         "MIT",
+  "repository":      {
     "type": "git",
-    "url": "git+https://github.com/gavinsawyer/shortcuts-api.git"
+    "url":  "git+https://github.com/gavinsawyer/shortcuts-api.git"
   },
-  "private": true,
+  "private":         true,
   "devDependencies": {
-    "@nx/eslint-plugin": "^18.0.1",
-    "@nx/js": "^18.0.1",
-    "@nx/linter": "^18.0.1",
+    "@nx/eslint-plugin":                "^18.0.1",
+    "@nx/js":                           "^18.0.1",
+    "@nx/linter":                       "^18.0.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "eslint-plugin-tsdoc": "^0.2.17",
-    "firebase-functions": "^4.6.0",
-    "nx": "^18.0.1",
-    "nx-cloud": "^18.0.0",
-    "typescript": "~5.1.6"
+    "eslint-plugin-tsdoc":              "^0.2.17",
+    "firebase-functions":               "^4.6.0",
+    "nx":                               "^18.0.1",
+    "nx-cloud":                         "^18.0.0",
+    "typescript":                       "~5.1.6"
   }
 }
