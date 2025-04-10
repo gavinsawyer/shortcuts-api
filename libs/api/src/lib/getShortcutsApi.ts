@@ -15,6 +15,7 @@ export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestDat
   {
     enforceAppCheck: false,
     ingressSettings: "ALLOW_ALL",
+    secrets:         [ Shortcuts_API_Access_Token ],
   },
   async (callableRequest: CallableRequest<CallableRequestData>): Promise<CallableResponseData> => callableRequest.rawRequest.protocol === "https" ? callableRequest.data.accessToken ? callableRequest.data.accessToken === Shortcuts_API_Access_Token.value() ? callableRequest.data.operation ? ((firestore: Firestore): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).get().then<CallableResponseData>(
     (privateDocumentSnapshot: DocumentSnapshot<PrivateDocument>): Promise<CallableResponseData> => (async (privateDocument: PrivateDocument | null): Promise<CallableResponseData> => privateDocument ? callableRequest.data.operation === "get private document" ? {
