@@ -1,8 +1,9 @@
-import { App }                                                          from "firebase-admin/app";
-import { DocumentReference, DocumentSnapshot, Firestore, getFirestore } from "firebase-admin/firestore";
-import { CallableFunction, CallableRequest, onCall }                    from "firebase-functions/v2/https";
-import { PrivateDocument, PublicDocument, User }                        from "./interfaces";
-import { CallableRequestData, CallableResponseData }                    from "./types";
+import { type App }                                                                    from "firebase-admin/app";
+import { type DocumentReference, type DocumentSnapshot, type Firestore, getFirestore } from "firebase-admin/firestore";
+import { type CallableFunction, type CallableRequest, onCall }                         from "firebase-functions/v2/https";
+import { type PrivateDocument, type PublicDocument, type User }                        from "./interfaces";
+import { Shortcuts_API_Access_Token }                                                  from "./secret params";
+import { type CallableRequestData, type CallableResponseData }                         from "./types";
 
 
 // noinspection JSUnusedGlobalSymbols
@@ -10,12 +11,12 @@ import { CallableRequestData, CallableResponseData }                    from "./
  * @param app - An optional {@link App} to use with Firestore.
  * @returns - A {@link CallableFunction} which will need to be exported from your Firebase Functions package index.
  */
-export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestData, Promise<CallableResponseData>> = (app?: App): CallableFunction<CallableRequestData, Promise<CallableResponseData>> => onCall(
+export const getShortcutsApi: (app?: App) => CallableFunction<CallableRequestData, Promise<CallableResponseData>> = (app?: App): CallableFunction<CallableRequestData, Promise<CallableResponseData>> => onCall<CallableRequestData, Promise<CallableResponseData>>(
   {
     enforceAppCheck: false,
     ingressSettings: "ALLOW_ALL",
   },
-  async (callableRequest: CallableRequest<CallableRequestData>): Promise<CallableResponseData> => callableRequest.rawRequest.protocol === "https" ? callableRequest.data.accessToken ? callableRequest.data.accessToken === process.env["SHORTCUTS_API_ACCESS_TOKEN"] ? callableRequest.data.operation ? ((firestore: Firestore): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).get().then<CallableResponseData>(
+  async (callableRequest: CallableRequest<CallableRequestData>): Promise<CallableResponseData> => callableRequest.rawRequest.protocol === "https" ? callableRequest.data.accessToken ? callableRequest.data.accessToken === Shortcuts_API_Access_Token.value() ? callableRequest.data.operation ? ((firestore: Firestore): Promise<CallableResponseData> => (firestore.collection("environment").doc("private") as DocumentReference<PrivateDocument>).get().then<CallableResponseData>(
     (privateDocumentSnapshot: DocumentSnapshot<PrivateDocument>): Promise<CallableResponseData> => (async (privateDocument: PrivateDocument | null): Promise<CallableResponseData> => privateDocument ? callableRequest.data.operation === "get private document" ? {
       operation:       callableRequest.data.operation,
       privateDocument: privateDocument,

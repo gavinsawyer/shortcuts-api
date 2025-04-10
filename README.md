@@ -39,7 +39,7 @@ Having somewhere to store and retrieve Focus mode, location, and time of day ena
     // Other functions...
     ```
 
-3. Deploy your Firebase Functions:
+3. Deploy your Firebase Functions. You will be asked to enter a value for **Shortcuts_API_Access_Token**:
 
     ```
     % firebase deploy --only functions
@@ -73,7 +73,7 @@ Having somewhere to store and retrieve Focus mode, location, and time of day ena
 ### Usage
 Download and import all items in within the [shortcuts](shortcuts) directory to your Mac or iOS device. You may organize them into folders once imported, but it's not necessary. `Config` requires setup including:
 - Providing your home Wi-Fi network's name, the Cloud Function's URL, and the username as it appears in Firestore ("Gavin" in code sample above).
-- Creating an `Access Token`
+- Entering the you created for the secret **Shortcuts_API_Access_Token** in `Access Token`
 
 [State shortcuts](shortcuts/States) are left empty for you to customize. These are used to express state rather than to respond to events and must be able to be triggered repeatedly without side effects. Whether you are home is determined by your iPhone's Wi-Fi connection.
 - `At Home and Awake Anytime`: Partial state of your home when you are at home and awake at any time (preferred temp, etc.). This is always preceded by either:
@@ -129,6 +129,5 @@ Currently supported Focus modes:
 export type Focus = "Developing" | "Do Not Disturb" | "Driving" | "Fitness" | "Personal" | "Sleep" | "Studying" | "Work";
 ```
 ### Google Cloud Setup
-- Reference the access token you created in the `Config` shortcut as a secret by exposing the environment variable `SHORTCUTS_API_ACCESS_TOKEN` in [Cloud Functions](https://console.cloud.google.com/functions/list) under `shortcutsApi` > Edit > Security and Image Repo.
 - Grant the `Cloud Functions Invoker` role to the `allUsers` principal in [Cloud Functions](https://console.cloud.google.com/functions/list) under `shortcutsApi` > Permissions.
 - Grant the `Cloud Datastore User` role to the `App Engine default service account` principal in [Service accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) under `App Engine default service account` > Permissions.

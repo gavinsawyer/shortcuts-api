@@ -1,6 +1,6 @@
-export * from "./lib/CallableOperation";
-export * from "./lib/CallableRequestData";
-export * from "./lib/CallableResponseData";
-export * from "./lib/Focus";
-export * from "./lib/Location";
-export * from "./lib/Time";
+export type * from "./lib/CallableOperation";
+export type * from "./lib/CallableRequestData";
+export type * from "./lib/CallableResponseData";
+export type * from "./lib/Focus";
+export type * from "./lib/Location";
+export type * from "./lib/Time";

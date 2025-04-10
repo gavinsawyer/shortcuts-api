@@ -1,3 +1,3 @@
-export * from "./lib/PrivateDocument";
-export * from "./lib/PublicDocument";
-export * from "./lib/User";
+export type * from "./lib/PrivateDocument";
+export type * from "./lib/PublicDocument";
+export type * from "./lib/User";
